@@ -1,0 +1,26 @@
+{
+  "name": "ai-recipe-generator",
+  "version": "1.0.0",
+  "description": "A simple full-stack app that generates creative recipes using AI",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "start": "concurrently \"npm run server\" \"cd frontend && npm run preview\""
+  },
+  "keywords": [
+    "recipe",
+    "ai",
+    "fullstack",
+    "react",
+    "express"
+  ],
+  "author": "Magdalene Sullivan",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  servings     Int      @default(4)
+  prepTime     String
+  cookTime     String
+  ingredients  String   // JSON string of ingredients array
+  instructions String   // JSON string of instructions array
+  tips         String?  // Optional cooking tips
+  cuisine      String   @default("International") // Cuisine type/region
+  
+  // User interaction fields
+  isFavorite   Boolean  @default(false)
+  rating       Int?     // 1-5 stars (nullable)
+  personalNotes String? // User's personal notes
+  
+  // Metadata
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Original ingredients used for generation (for "similar recipes")
+  originalIngredients String // JSON string of original ingredients
+  
+  @@map("recipes")
+}
