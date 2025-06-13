@@ -279,4 +279,4 @@ MIT License - Open source and portfolio-friendly!
 **Built with ❤️, AI, and modern web technologies!**  
 *Perfect for demonstrating full-stack development expertise, AI integration skills, and modern web application architecture.*
 
-**✨ Ready to impress employers and clients with a production-ready, feature-rich application! ✨** 
+**✨ Ready to impress employers and clients with a production-ready, feature-rich application! If this repo leaves you interested in working with me, please reach out. ✨** 
