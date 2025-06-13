@@ -1,6 +1,6 @@
 # 🍳 Chef Izzy's AI Recipe Generator
 
-A **comprehensive full-stack recipe management platform** that transforms ingredients into creative, AI-generated recipes! This enterprise-level application showcases advanced React development, modern backend architecture, and sophisticated AI integration - perfect for portfolio demonstrations.
+A **comprehensive full-stack recipe management platform** that transforms ingredients into creative, AI-generated recipes! This enterprise-level application showcases advanced React development, modern backend architecture, and sophisticated AI integration -- intended for portfolio demonstrations, but not necessarily ;>.
 
 ![Chef Izzy](Chef_izzy.png)
 
@@ -106,8 +106,8 @@ The installers will:
 ### **Manual Setup** *(For developers)*
    ```bash
 # 1. Clone and navigate
-git clone <your-repo-url>
-cd chef-izzy-ai-cookbook
+git clone ai-cookbook-portfolio
+cd ai-cookbook-portfolio
 
 # 2. Install all dependencies
 npm run install-all
