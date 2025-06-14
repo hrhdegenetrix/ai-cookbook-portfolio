@@ -1,186 +1,255 @@
 #!/bin/bash
 
-# Chef Izzy's AI Recipe Generator - Linux/Mac Setup Script
-# Colors for output
+# AI Recipe Generator - Linux/Mac Setup Script
+# Professional Portfolio Project Setup
+
+# Colors for better output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
 YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
 NC='\033[0m' # No Color
 
 # Clear screen and show header
 clear
-echo -e "${PURPLE}"
-echo "  ╔══════════════════════════════════════════════════════════════════╗"
-echo "  ║                    🍳 Chef Izzy's AI Cookbook                   ║"
-echo "  ║                      Linux/Mac Setup Installer                  ║"
-echo "  ╚══════════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+echo -e "${CYAN}================================================================${NC}"
+echo -e "${CYAN}          AI RECIPE GENERATOR - PORTFOLIO PROJECT${NC}"
+echo -e "${CYAN}              Linux/Mac Installation Script${NC}"  
+echo -e "${CYAN}================================================================${NC}"
+echo ""
 
-# Function to check if command exists
+# Function to check Node.js version compatibility
+check_node_version() {
+    local version=$1
+    local version_number=${version#v}  # Remove 'v' prefix
+    local major=$(echo $version_number | cut -d. -f1)
+    local minor=$(echo $version_number | cut -d. -f2)
+    
+    # Check if version is >= 18.16
+    if [ "$major" -gt 18 ]; then
+        return 0
+    elif [ "$major" -eq 18 ] && [ "$minor" -ge 16 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Check prerequisites
-echo -e "${BLUE}[1/5] Checking prerequisites...${NC}"
+# Step 1: Check Node.js installation
+echo -e "${YELLOW}[1/6] Checking Node.js installation...${NC}"
 
-# Check for Node.js
 if ! command_exists node; then
     echo -e "${RED}❌ Node.js is not installed!${NC}"
     echo ""
-    echo "Please install Node.js first:"
-    echo "1. Go to https://nodejs.org"
-    echo "2. Download and install the LTS version"
-    echo "3. Or use your package manager:"
-    echo "   • Ubuntu/Debian: sudo apt install nodejs npm"
-    echo "   • CentOS/RHEL: sudo yum install nodejs npm"
-    echo "   • macOS (Homebrew): brew install node"
-    echo "4. Run this setup again"
+    echo -e "${YELLOW}Please install Node.js 18.16.0 or higher from:${NC}"
+    echo -e "${YELLOW}https://nodejs.org/${NC}"
     echo ""
-    read -p "Press Enter to exit..."
+    echo -e "${YELLOW}Or use a package manager:${NC}"
+    echo -e "${WHITE}  • Ubuntu/Debian: sudo apt install nodejs npm${NC}"
+    echo -e "${WHITE}  • CentOS/RHEL: sudo yum install nodejs npm${NC}"
+    echo -e "${WHITE}  • macOS: brew install node${NC}"
+    echo ""
+    echo -e "${YELLOW}After installation, restart this script.${NC}"
     exit 1
 fi
 
 NODE_VERSION=$(node --version)
-echo -e "${GREEN}✅ Node.js $NODE_VERSION detected${NC}"
+echo -e "${GREEN}✅ Node.js found: $NODE_VERSION${NC}"
 
-# Check for npm
+if ! check_node_version "$NODE_VERSION"; then
+    echo -e "${RED}❌ Node.js version $NODE_VERSION is too old!${NC}"
+    echo -e "${RED}❌ This project requires Node.js 18.16.0 or higher.${NC}"
+    echo ""
+    echo -e "${YELLOW}Please update Node.js from: https://nodejs.org/${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Node.js version is compatible!${NC}"
+echo ""
+
+# Step 2: Check npm installation
+echo -e "${YELLOW}[2/6] Checking npm installation...${NC}"
+
 if ! command_exists npm; then
-    echo -e "${RED}❌ npm is not available!${NC}"
-    read -p "Press Enter to exit..."
+    echo -e "${RED}❌ npm is not installed!${NC}"
+    echo -e "${YELLOW}Please install npm or reinstall Node.js.${NC}"
     exit 1
 fi
 
 NPM_VERSION=$(npm --version)
-echo -e "${GREEN}✅ npm $NPM_VERSION detected${NC}"
+echo -e "${GREEN}✅ npm found: v$NPM_VERSION${NC}"
 echo ""
 
-# Install dependencies
-echo -e "${BLUE}[2/5] Installing application dependencies...${NC}"
-echo "This may take a few minutes..."
-echo ""
+# Step 3: Install backend dependencies
+echo -e "${YELLOW}[3/6] Installing backend dependencies...${NC}"
 
-if ! npm run install-all; then
-    echo -e "${RED}❌ Installation failed!${NC}"
-    read -p "Press Enter to exit..."
+if [ ! -d "backend" ]; then
+    echo -e "${RED}❌ Backend directory not found!${NC}"
+    echo -e "${YELLOW}Please make sure you're running this script from the project root directory.${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}✅ Dependencies installed successfully${NC}"
-echo ""
-
-# Setup database
-echo -e "${BLUE}[3/5] Setting up database...${NC}"
 cd backend
-npx prisma generate >/dev/null 2>&1
-npx prisma db push >/dev/null 2>&1
+echo -e "${CYAN}Installing backend packages (this may take a few minutes)...${NC}"
+
+if ! npm install; then
+    echo -e "${RED}❌ Backend installation failed!${NC}"
+    echo -e "${YELLOW}Please check the error messages above.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Backend dependencies installed!${NC}"
 cd ..
-echo -e "${GREEN}✅ Database configured${NC}"
 echo ""
 
-# Create launcher script
-echo -e "${BLUE}[4/5] Creating application launcher...${NC}"
+# Step 4: Install frontend dependencies
+echo -e "${YELLOW}[4/6] Installing frontend dependencies...${NC}"
 
-cat > "chef-izzy-launcher.sh" << 'EOF'
+if [ ! -d "frontend" ]; then
+    echo -e "${RED}❌ Frontend directory not found!${NC}"
+    echo -e "${YELLOW}Please make sure you're running this script from the project root directory.${NC}"
+    exit 1
+fi
+
+cd frontend
+echo -e "${CYAN}Installing frontend packages (this may take a few minutes)...${NC}"
+
+if ! npm install; then
+    echo -e "${RED}❌ Frontend installation failed!${NC}"
+    echo -e "${YELLOW}Please check the error messages above.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Frontend dependencies installed!${NC}"
+cd ..
+echo ""
+
+# Step 5: Setup database
+echo -e "${YELLOW}[5/6] Setting up database...${NC}"
+
+cd backend
+
+if ! npx prisma generate; then
+    echo -e "${RED}❌ Database schema generation failed!${NC}"
+    exit 1
+fi
+
+if ! npx prisma db push; then
+    echo -e "${RED}❌ Database setup failed!${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Database setup complete!${NC}"
+cd ..
+echo ""
+
+# Step 6: Create launchers and shortcuts
+echo -e "${YELLOW}[6/6] Creating shortcuts and launchers...${NC}"
+
+# Create shell launcher script
+cat > start-app.sh << 'EOF'
 #!/bin/bash
 
-# Chef Izzy's AI Recipe Generator Launcher
+# AI Recipe Generator Launcher
+
 # Colors
-PURPLE='\033[0;35m'
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 clear
-echo -e "${PURPLE}"
-echo "  ╔══════════════════════════════════════════════════════════════════╗"
-echo "  ║                    🍳 Chef Izzy's AI Cookbook                   ║"
-echo "  ║                     Starting Application...                     ║"
-echo "  ╚══════════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+echo -e "${CYAN}Starting AI Recipe Generator...${NC}"
+echo -e "${YELLOW}Backend starting on port 5001...${NC}"
+
+# Start backend in background
+cd backend
+npm start &
+BACKEND_PID=$!
+cd ..
+
+sleep 3
+
+echo -e "${YELLOW}Frontend starting on port 3000...${NC}"
+
+# Start frontend in background
+cd frontend
+npm run dev &
+FRONTEND_PID=$!
+cd ..
+
 echo ""
-echo -e "${BLUE}⚡ Starting backend server...${NC}"
-echo -e "${BLUE}⚡ Starting frontend server...${NC}"
-echo -e "${BLUE}⚡ Opening browser...${NC}"
+echo -e "${GREEN}✅ AI Recipe Generator is starting!${NC}"
+echo -e "${CYAN}  Backend: http://localhost:5001${NC}"
+echo -e "${CYAN}  Frontend: http://localhost:3000${NC}"
 echo ""
-echo -e "${GREEN}Your recipe generator will open in your browser shortly!${NC}"
-echo -e "${GREEN}Press Ctrl+C to stop the application.${NC}"
+echo -e "${YELLOW}Both servers are now running.${NC}"
+echo -e "${YELLOW}Press Ctrl+C to stop both servers.${NC}"
 echo ""
 
-# Start the application
-npm run dev
+# Wait for Ctrl+C
+trap 'echo -e "\n${YELLOW}Stopping servers...${NC}"; kill $BACKEND_PID $FRONTEND_PID 2>/dev/null; exit 0' INT
+
+# Keep script running
+wait
 EOF
 
-chmod +x chef-izzy-launcher.sh
+chmod +x start-app.sh
 
-# Create desktop shortcut (if desktop environment is available)
-echo -e "${BLUE}[5/5] Creating shortcuts...${NC}"
-
-# Try to create a desktop shortcut (works on most Linux desktop environments)
-if [ -d "$HOME/Desktop" ] && command_exists xdg-desktop-menu; then
-    CURRENT_DIR=$(pwd)
-    
-    cat > "$HOME/Desktop/chef-izzy-recipe-generator.desktop" << EOF
+# Create desktop shortcut for Linux
+if command_exists desktop-file-install 2>/dev/null; then
+    cat > ai-recipe-generator.desktop << EOF
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Chef Izzy's Recipe Generator
-Comment=Transform ingredients into delicious recipes with AI!
-Exec=$CURRENT_DIR/chef-izzy-launcher.sh
-Icon=$CURRENT_DIR/Chef_izzy.png
-Path=$CURRENT_DIR
+Name=AI Recipe Generator
+Comment=Professional AI-powered recipe generator portfolio project
+Exec=$PWD/start-app.sh
+Icon=$PWD/Chef_izzy.png
+Path=$PWD
 Terminal=true
-StartupNotify=true
-Categories=Utility;Development;
+Categories=Development;Education;
 EOF
     
-    chmod +x "$HOME/Desktop/chef-izzy-recipe-generator.desktop"
-    echo -e "${GREEN}✅ Desktop shortcut created${NC}"
-elif [ "$(uname)" = "Darwin" ]; then
-    # macOS - Create a simple app bundle
-    if [ -d "/Applications" ]; then
-        echo -e "${YELLOW}💡 On macOS, you can create an alias by dragging chef-izzy-launcher.sh to your Applications folder${NC}"
+    # Try to install desktop shortcut
+    if [ -d "$HOME/Desktop" ]; then
+        cp ai-recipe-generator.desktop "$HOME/Desktop/" 2>/dev/null
+        chmod +x "$HOME/Desktop/ai-recipe-generator.desktop" 2>/dev/null
     fi
 fi
 
-echo -e "${GREEN}✅ Launcher created: chef-izzy-launcher.sh${NC}"
+echo -e "${GREEN}✅ Created start-app.sh launcher${NC}"
 echo ""
 
-# Success message
-echo -e "${PURPLE}"
-echo "  ╔══════════════════════════════════════════════════════════════════╗"
-echo "  ║                        🎉 SETUP COMPLETE! 🎉                    ║"
-echo "  ╚══════════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+# Display completion message
+echo -e "${CYAN}================================================================${NC}"
+echo -e "${GREEN}                    🎉 INSTALLATION COMPLETE! 🎉${NC}"
+echo -e "${CYAN}================================================================${NC}"
 echo ""
-echo -e "${GREEN}🚀 Quick Start Options:${NC}"
+echo -e "${GREEN}Your AI Recipe Generator is ready to use!${NC}"
 echo ""
-echo "   1. Run: ./chef-izzy-launcher.sh"
-echo "   2. Or run: npm run dev" 
-echo "   3. Or use the desktop shortcut (if created)"
-echo ""
-echo -e "${BLUE}📝 Next Steps:${NC}"
-echo "   • The app will open in your browser automatically"
-echo "   • You'll be prompted for your OpenAI API key on first use"
-echo "   • Get your API key at: https://platform.openai.com/api-keys"
-echo ""
-echo -e "${YELLOW}💡 Tips:${NC}"
-echo "   • Keep the terminal window open while using the app"
-echo "   • Press Ctrl+C to stop the application"
-echo "   • Your recipes are saved automatically to a local database"
-echo ""
-echo -e "${PURPLE}Ready to start cooking with AI? 👨‍🍳✨${NC}"
-echo ""
-
-# Ask if user wants to start now
-read -p "Would you like to start Chef Izzy now? (y/n): " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo ""
-    echo -e "${GREEN}Starting Chef Izzy's AI Recipe Generator...${NC}"
-    ./chef-izzy-launcher.sh
+echo -e "${YELLOW}📁 Files created:${NC}"
+echo -e "${WHITE}  • start-app.sh - Launch script${NC}"
+if [ -f "$HOME/Desktop/ai-recipe-generator.desktop" ]; then
+    echo -e "${WHITE}  • Desktop shortcut (if supported)${NC}"
 fi
-
-exit 0 
+echo ""
+echo -e "${YELLOW}🚀 To start the application:${NC}"
+echo -e "${WHITE}  1. Run: ./start-app.sh${NC}"
+echo -e "${WHITE}  2. Or manually run:${NC}"
+echo -e "${WHITE}     - Backend: cd backend && npm start${NC}"
+echo -e "${WHITE}     - Frontend: cd frontend && npm run dev${NC}"
+echo ""
+echo -e "${YELLOW}🌐 Access URLs:${NC}"
+echo -e "${CYAN}  • Frontend: http://localhost:3000${NC}"
+echo -e "${CYAN}  • Backend API: http://localhost:5001${NC}"
+echo ""
+echo -e "${YELLOW}📖 Need help? Check the README.md file for detailed instructions.${NC}"
+echo ""
+echo -e "${CYAN}================================================================${NC}" 

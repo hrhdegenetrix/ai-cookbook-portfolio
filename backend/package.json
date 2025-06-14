@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "Backend API for AI Recipe Generator",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.16.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^5.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -16,7 +20,7 @@
     "fs-extra": "^11.2.0",
     "helmet": "^8.0.0",
     "openai": "^4.79.2",
-    "prisma": "^6.9.0",
+    "prisma": "^5.20.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

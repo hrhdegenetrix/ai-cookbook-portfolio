@@ -4,6 +4,10 @@
   "description": "Frontend React app for AI Recipe Generator",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=18.16.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "axios": "^1.7.9",
     "html2canvas": "^1.4.1",

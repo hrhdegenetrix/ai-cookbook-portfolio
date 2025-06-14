@@ -18,12 +18,23 @@ Write-Host "  ║                    Windows PowerShell Installer               
 Write-Host "  ╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor $Purple
 Write-Host ""
 
-# Function to test if command exists
-function Test-Command($command) {
-    try {
-        if (Get-Command $command -ErrorAction Stop) { return $true }
+# Function to check Node.js version compatibility
+function Test-NodeVersion {
+    param([string]$Version)
+    
+    $versionNumber = $Version -replace 'v', ''
+    $parts = $versionNumber -split '\.'
+    $major = [int]$parts[0]
+    $minor = [int]$parts[1]
+    
+    # Check if version is >= 18.16
+    if ($major -gt 18) {
+        return $true
+    } elseif ($major -eq 18 -and $minor -ge 16) {
+        return $true
+    } else {
+        return $false
     }
-    catch { return $false }
 }
 
 # Check prerequisites
@@ -45,6 +56,19 @@ if (-not (Test-Command "node")) {
 
 $nodeVersion = node --version
 Write-Host "✅ Node.js $nodeVersion detected" -ForegroundColor $Green
+
+if (-not (Test-NodeVersion $nodeVersion)) {
+    Write-Host "❌ Node.js version $nodeVersion is too old!" -ForegroundColor $Red
+    Write-Host "❌ This project requires Node.js 18.16.0 or higher." -ForegroundColor $Red
+    Write-Host ""
+    Write-Host "Please update Node.js from: https://nodejs.org/" -ForegroundColor $Yellow
+    Write-Host "Press any key to exit..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit 1
+}
+
+Write-Host "✅ Node.js version is compatible!" -ForegroundColor $Green
+Write-Host ""
 
 # Check for npm
 if (-not (Test-Command "npm")) {

@@ -1,6 +1,6 @@
-# 🍳 Chef Izzy's AI Recipe Generator
+# 🍳 AI Recipe Generator - Portfolio Project
 
-A **comprehensive full-stack recipe management platform** that transforms ingredients into creative, AI-generated recipes! This enterprise-level application showcases advanced React development, modern backend architecture, and sophisticated AI integration -- intended for portfolio demonstrations, but not necessarily ;>.
+A **comprehensive full-stack recipe management platform** that transforms ingredients into creative, AI-generated recipes! This enterprise-level application showcases advanced React development, modern backend architecture, and sophisticated AI integration - perfect for portfolio demonstrations.
 
 ![Chef Izzy](Chef_izzy.png)
 
@@ -64,18 +64,30 @@ A **comprehensive full-stack recipe management platform** that transforms ingred
 
 ### **Database & ORM**
 - **SQLite** - Lightweight, embedded database
-- **Prisma** - Modern ORM with migrations and type safety
+- **Prisma 5.20** - Modern ORM with migrations and type safety
 - **Structured Schema** - Recipes, ratings, notes, timestamps
 - **JSON Storage** - Flexible ingredient and instruction storage
 - **Automatic Cleanup** - Intelligent old recipe management
 
-## 🛠️ **Super Easy Setup**
+## 🛠️ **System Requirements**
 
 ### **Prerequisites**
-- **Node.js** (v16 or higher) - [Download here](https://nodejs.org)
+- **Node.js 18.16.0 or higher** - [Download here](https://nodejs.org)
+- **npm 8.0.0 or higher** (comes with Node.js)
 - **OpenAI API Key** - [Get one here](https://platform.openai.com/api-keys)
 
-### **🚀 One-Click Installers** *(Recommended)*
+> **⚠️ Important**: This project requires Node.js 18.16.0 or higher for Prisma compatibility. The installers will check your version automatically.
+
+### **Version Checking**
+```bash
+# Check your current versions:
+node --version  # Should be v18.16.0 or higher
+npm --version   # Should be 8.0.0 or higher
+```
+
+## 🚀 **Super Easy Setup**
+
+### **🎉 One-Click Installers** *(Recommended)*
 
 **Windows Users:**
    ```bash
@@ -95,49 +107,68 @@ chmod +x setup-linux.sh && ./setup-linux.sh
 .\setup-windows.ps1
 ```
 
-The installers will:
-- ✅ Check for Node.js and npm
-- ✅ Install all dependencies automatically  
-- ✅ Set up the database
-- ✅ Create desktop shortcuts with Chef Izzy icon
-- ✅ Create easy-to-use launchers
-- ✅ Optionally start the app immediately
+### **What the Installers Do:**
+- ✅ **Check Node.js version** (requires 18.16.0+)
+- ✅ **Install all dependencies** automatically  
+- ✅ **Set up the database** with Prisma
+- ✅ **Create launcher scripts** (start-app.bat/start-app.sh)
+- ✅ **Desktop shortcuts** with Chef Izzy icon (where supported)
+- ✅ **Error handling** with helpful guidance
 
 ### **Manual Setup** *(For developers)*
    ```bash
 # 1. Clone and navigate
-git clone ai-cookbook-portfolio
+git clone https://github.com/hrhdegenetrix/ai-cookbook-portfolio.git
 cd ai-cookbook-portfolio
 
-# 2. Install all dependencies
-npm run install-all
+# 2. Install backend dependencies
+cd backend
+npm install
 
-# 3. Start development servers
-   npm run dev
+# 3. Install frontend dependencies  
+cd ../frontend
+npm install
+
+# 4. Set up database
+cd ../backend
+npx prisma generate
+npx prisma db push
+
+# 5. Start servers (in separate terminals)
+# Terminal 1: Backend
+cd backend && npm start
+
+# Terminal 2: Frontend
+cd frontend && npm run dev
    ```
 
-### **What Happens Automatically:**
-- ✅ Backend starts on available port (5000-5099)
-- ✅ Frontend starts with proper proxy configuration
-- ✅ Browser opens to the application
-- ✅ OpenAI API key prompt appears on first use
-- ✅ Desktop shortcuts created (Windows/Linux)
+### **Starting the Application:**
+After setup, you can start the app using:
+- **Windows**: Double-click `start-app.bat`
+- **Linux/Mac**: Run `./start-app.sh`
+- **Manual**: Run backend and frontend servers separately
 
 ## 🎯 **Using the Application**
 
-### **1. Recipe Generation**
+### **1. First Time Setup**
+1. **Start the application** using one of the methods above
+2. **Open your browser** to http://localhost:3000
+3. **Enter your OpenAI API key** when prompted
+4. **Start generating recipes!**
+
+### **2. Recipe Generation**
 1. **Add Ingredients**: Enter 1-5 ingredients you have
 2. **Choose Options**: Select number of recipes (1-5), servings, and cuisine style
 3. **Generate**: Watch AI create multiple unique recipes instantly
 4. **Rate & Save**: Star favorites, add personal notes, rate recipes
 
-### **2. Recipe Management**
+### **3. Recipe Management**
 - **Browse History**: View all generated recipes with search and filters
 - **Manage Favorites**: Quick access to your starred recipes
 - **Add Notes**: Personal cooking tips and modifications
 - **Export**: Download recipes as professional PDF files
 
-### **3. Analytics**
+### **4. Analytics**
 - **Track Usage**: See recipe generation trends and statistics
 - **Ingredient Analysis**: Discover your most-used ingredients
 - **Preference Insights**: Understand your cooking patterns
@@ -145,7 +176,7 @@ npm run install-all
 ## 📁 **Project Architecture**
 
 ```
-chef-izzy-ai-cookbook/
+ai-cookbook-portfolio/
 ├── 📱 frontend/                 # React + Vite Application
 │   ├── public/
 │   │   ├── Chef_izzy.png       # Mascot image (96px header, 37px tips)
@@ -162,11 +193,16 @@ chef-izzy-ai-cookbook/
 │   │   ├── schema.prisma      # Database schema definition
 │   │   └── dev.db             # SQLite database file
 │   ├── server.js              # Main server (900+ lines)
-│   ├── .env                   # Environment variables
 │   └── package.json           # Backend dependencies
-├── 📋 package.json             # Root scripts and workspace
+├── 🔧 Setup Scripts
+│   ├── setup-windows.bat      # Windows batch installer
+│   ├── setup-windows.ps1      # Windows PowerShell installer
+│   ├── setup-linux.sh         # Linux/Mac installer
+│   ├── start-app.bat          # Windows launcher (created by setup)
+│   └── start-app.sh           # Linux/Mac launcher (created by setup)
+├── 📦 AI-Recipe-Generator-v1.0.zip  # Clean distribution package
 ├── 📖 README.md               # This comprehensive documentation
-└── 🔧 SETUP.md               # Detailed setup instructions
+└── 🎨 Chef_izzy.png           # Chef Izzy mascot image
 ```
 
 ## 🔌 **API Documentation**
