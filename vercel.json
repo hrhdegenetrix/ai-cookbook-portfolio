@@ -3,11 +3,6 @@
   "outputDirectory": "frontend/dist",
   "devCommand": "npm run dev",
   "installCommand": "npm run install-all",
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "env": {
     "DATABASE_URL": "file:./prisma/dev.db"
   },
