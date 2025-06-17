@@ -9,17 +9,28 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+  // Debug logging
+  console.log('🔍 init-db endpoint called with method:', req.method);
+  console.log('🔍 Request headers:', req.headers);
+
   if (req.method === 'OPTIONS') {
+    console.log('✅ OPTIONS request handled');
     res.status(200).end();
     return;
   }
 
   if (req.method !== 'GET' && req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    console.log('❌ Method not allowed:', req.method);
+    return res.status(405).json({ 
+      error: 'Method not allowed',
+      received: req.method,
+      allowed: ['GET', 'POST']
+    });
   }
 
   try {
     console.log('🗄️ Initializing database...');
+    console.log('🔗 DATABASE_URL exists:', !!process.env.DATABASE_URL);
     
     // Try to create the tables using raw SQL
     await prisma.$executeRaw`
@@ -43,6 +54,8 @@ module.exports = async function handler(req, res) {
       );
     `;
 
+    console.log('✅ Table creation query executed');
+
     // Test the connection by checking if we can query the table
     const count = await prisma.recipe.count();
     
@@ -52,14 +65,17 @@ module.exports = async function handler(req, res) {
     res.json({ 
       success: true, 
       message: 'Database initialized successfully',
-      recipeCount: count
+      recipeCount: count,
+      method: req.method,
+      timestamp: new Date().toISOString()
     });
 
   } catch (error) {
     console.error('❌ Database initialization error:', error);
     res.status(500).json({ 
       error: 'Database initialization failed',
-      details: error.message 
+      details: error.message,
+      method: req.method
     });
   } finally {
     await prisma.$disconnect();
