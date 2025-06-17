@@ -9,10 +9,22 @@ console.log('============================================\n');
 
 // Check if dependencies are installed
 const checkDependencies = () => {
-  const nodeModulesExists = fs.existsSync(path.join(__dirname, 'node_modules'));
-  const frontendNodeModulesExists = fs.existsSync(path.join(__dirname, 'frontend', 'node_modules'));
-  
-  return nodeModulesExists && frontendNodeModulesExists;
+  try {
+    // Check if key dependencies actually exist and can be resolved
+    require.resolve('express');
+    require.resolve('react');
+    require.resolve('@prisma/client');
+    require.resolve('vite');
+    
+    // Also check directory structure
+    const nodeModulesExists = fs.existsSync(path.join(__dirname, 'node_modules'));
+    const frontendNodeModulesExists = fs.existsSync(path.join(__dirname, 'frontend', 'node_modules'));
+    
+    return nodeModulesExists && frontendNodeModulesExists;
+  } catch (error) {
+    // If any key dependency can't be resolved, we need to install
+    return false;
+  }
 };
 
 // Quick install function
