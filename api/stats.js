@@ -20,18 +20,24 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Get basic counts
-    const [totalRecipes, favoriteRecipes, recentRecipes] = await Promise.all([
-      prisma.recipe.count(),
-      prisma.recipe.count({ where: { isFavorite: true } }),
-      prisma.recipe.count({
-        where: {
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // Last 7 days
-          }
+    console.log('📊 Starting stats calculation...');
+    
+    // Get basic counts with individual queries to avoid prepared statement conflicts
+    const totalRecipes = await prisma.recipe.count();
+    console.log('📊 Total recipes:', totalRecipes);
+    
+    const favoriteRecipes = await prisma.recipe.count({ where: { isFavorite: true } });
+    console.log('📊 Favorite recipes:', favoriteRecipes);
+    
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const recentRecipes = await prisma.recipe.count({
+      where: {
+        createdAt: {
+          gte: sevenDaysAgo
         }
-      })
-    ]);
+      }
+    });
+    console.log('📊 Recent recipes:', recentRecipes);
 
     // Get top ingredients from original ingredients
     const recipes = await prisma.recipe.findMany({
@@ -72,8 +78,17 @@ module.exports = async function handler(req, res) {
     res.json(stats);
 
   } catch (error) {
-    console.error('Error fetching stats:', error);
-    res.status(500).json({ error: 'Failed to fetch stats' });
+    console.error('❌ Stats API error:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta
+    });
+    res.status(500).json({ 
+      error: 'Failed to fetch stats',
+      details: error.message,
+      code: error.code
+    });
   } finally {
     await prisma.$disconnect();
   }

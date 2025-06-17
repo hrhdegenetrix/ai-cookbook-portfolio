@@ -17,6 +17,8 @@ module.exports = async function handler(req, res) {
 
   const { id } = req.query;
 
+  console.log(`🔍 Recipe endpoint called: ${req.method} /api/recipes/${id}`);
+
   if (!id) {
     return res.status(400).json({ error: 'Recipe ID is required' });
   }
@@ -25,7 +27,7 @@ module.exports = async function handler(req, res) {
     if (req.method === 'GET') {
       // Get a single recipe
       const recipe = await prisma.recipe.findUnique({
-        where: { id: parseInt(id) }
+        where: { id: id }
       });
 
       if (!recipe) {
@@ -44,11 +46,13 @@ module.exports = async function handler(req, res) {
 
     } else if (req.method === 'PATCH') {
       // Update a recipe
+      console.log('💾 PATCH request body:', req.body);
       const updateData = {};
       const { isFavorite, rating, personalNotes, title } = req.body;
 
       if (typeof isFavorite === 'boolean') {
         updateData.isFavorite = isFavorite;
+        console.log('⭐ Setting favorite status:', isFavorite);
       }
       if (rating !== undefined) {
         updateData.rating = rating;
@@ -61,7 +65,7 @@ module.exports = async function handler(req, res) {
       }
 
       const updatedRecipe = await prisma.recipe.update({
-        where: { id: parseInt(id) },
+        where: { id: id },
         data: updateData
       });
 
@@ -70,7 +74,7 @@ module.exports = async function handler(req, res) {
     } else if (req.method === 'DELETE') {
       // Delete a recipe
       await prisma.recipe.delete({
-        where: { id: parseInt(id) }
+        where: { id: id }
       });
 
       res.json({ success: true });
