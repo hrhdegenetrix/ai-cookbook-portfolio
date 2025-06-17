@@ -21,18 +21,24 @@ module.exports = async function handler(req, res) {
 
   const { id } = req.query;
 
+  console.log(`🔍 Similar recipe endpoint called for ID: ${id}`);
+
   if (!id) {
+    console.log('❌ No recipe ID provided');
     return res.status(400).json({ error: 'Recipe ID is required' });
   }
 
   try {
     // Check if OpenAI API key is available
     if (!process.env.OPENAI_API_KEY) {
+      console.log('❌ OpenAI API key not configured');
       return res.status(400).json({ 
         error: 'OpenAI API key not configured. Please set your API key first.',
         requiresApiKey: true
       });
     }
+    
+    console.log('✅ OpenAI API key is configured');
 
     // Get the original recipe
     console.log(`🔍 Looking for recipe with ID: ${id}`);
@@ -41,13 +47,17 @@ module.exports = async function handler(req, res) {
     });
 
     if (!originalRecipe) {
+      console.log(`❌ Recipe not found with ID: ${id}`);
       return res.status(404).json({ error: 'Recipe not found' });
     }
+    
+    console.log(`✅ Found recipe: ${originalRecipe.title}`);
 
     // Parse original ingredients
     const originalIngredients = JSON.parse(originalRecipe.originalIngredients);
 
     // Import OpenAI  
+    console.log('🤖 Initializing OpenAI client...');
     const OpenAI = require('openai');
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -75,6 +85,7 @@ module.exports = async function handler(req, res) {
     
     Make it creative and distinctly different from the original while keeping the same core ingredients!`;
 
+    console.log('🌟 Making OpenAI API call...');
     const completion = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
