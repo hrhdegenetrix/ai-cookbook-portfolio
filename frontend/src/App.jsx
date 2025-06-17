@@ -1481,7 +1481,7 @@ function App() {
                 </div>
 
                 <div className="recipe-grid">
-                  {generatedRecipes.map((recipe, index) => (
+                  {[...generatedRecipes].reverse().map((recipe, index) => (
                     <div key={recipe.id || index} className="recipe-card generated-recipe-card">
                       <div className="recipe-card-header">
                         <h3 className="recipe-card-title">{recipe.title}</h3>
