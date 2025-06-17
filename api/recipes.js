@@ -57,21 +57,21 @@ module.exports = async function handler(req, res) {
         page, limit, search, favorites, cuisine, maxTime, sortBy, sortOrder
       });
       
-      // Convert search terms to lowercase for case-insensitive search in SQLite
+      // PostgreSQL-compatible search (case-insensitive using ILIKE)
       const searchLower = search ? search.toLowerCase() : null;
       const cuisineLower = cuisine ? cuisine.toLowerCase() : null;
       
       const where = {
         ...(searchLower && {
           OR: [
-            { title: { contains: searchLower } },
-            { description: { contains: searchLower } },
-            { ingredients: { contains: searchLower } },
-            { tips: { contains: searchLower } }
+            { title: { contains: searchLower, mode: 'insensitive' } },
+            { description: { contains: searchLower, mode: 'insensitive' } },
+            { ingredients: { contains: searchLower, mode: 'insensitive' } },
+            { tips: { contains: searchLower, mode: 'insensitive' } }
           ]
         }),
         ...(favorites === 'true' && { isFavorite: true }),
-        ...(cuisineLower && { cuisine: { contains: cuisineLower } })
+        ...(cuisineLower && { cuisine: { contains: cuisineLower, mode: 'insensitive' } })
       };
       
       // Handle maxTime filter (calculate total time from prep + cook)
@@ -139,7 +139,7 @@ module.exports = async function handler(req, res) {
           total,
           pages: Math.ceil(total / parseInt(limit))
         }
-            });
+      });
       
     } else {
       res.status(405).json({ error: 'Method not allowed' });

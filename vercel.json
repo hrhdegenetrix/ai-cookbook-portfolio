@@ -3,8 +3,10 @@
   "outputDirectory": "frontend/dist",
   "devCommand": "npm run dev",
   "installCommand": "npm run install-all",
-  "env": {
-    "DATABASE_URL": "file:./prisma/dev.db"
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30
+    }
   },
   "rewrites": [
     {
