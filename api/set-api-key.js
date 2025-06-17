@@ -28,7 +28,7 @@ module.exports = async function handler(req, res) {
 
     // Test the API key by making a simple request
     try {
-      const { default: OpenAI } = await import('openai');
+      const OpenAI = require('openai');
       const testClient = new OpenAI({ apiKey });
       await testClient.models.list(); // Simple test request
     } catch (testError) {

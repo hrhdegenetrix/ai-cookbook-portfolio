@@ -42,8 +42,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Recipe quantity must be between 1 and 5' });
     }
 
-    // Import OpenAI dynamically
-    const { default: OpenAI } = await import('openai');
+    // Import OpenAI
+    const OpenAI = require('openai');
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     const ingredientList = ingredients.join(', ');

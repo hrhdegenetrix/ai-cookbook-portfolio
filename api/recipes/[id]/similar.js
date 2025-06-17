@@ -46,8 +46,8 @@ module.exports = async function handler(req, res) {
     // Parse original ingredients
     const originalIngredients = JSON.parse(originalRecipe.originalIngredients);
 
-    // Import OpenAI dynamically
-    const { default: OpenAI } = await import('openai');
+    // Import OpenAI  
+    const OpenAI = require('openai');
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     const prompt = `Create a similar but distinctly different recipe inspired by "${originalRecipe.title}". 
