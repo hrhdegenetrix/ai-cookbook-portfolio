@@ -35,8 +35,9 @@ module.exports = async function handler(req, res) {
     }
 
     // Get the original recipe
+    console.log(`🔍 Looking for recipe with ID: ${id}`);
     const originalRecipe = await prisma.recipe.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: id }
     });
 
     if (!originalRecipe) {
@@ -202,7 +203,12 @@ module.exports = async function handler(req, res) {
     }
 
   } catch (error) {
-    console.error('Error generating similar recipe:', error);
+    console.error('❌ Error generating similar recipe:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta
+    });
     
     // Handle specific OpenAI errors
     if (error.code === 'insufficient_quota') {
@@ -220,7 +226,8 @@ module.exports = async function handler(req, res) {
     }
 
     res.status(500).json({ 
-      error: 'Sorry, I couldn\'t generate a similar recipe right now. Please try again later!' 
+      error: 'Sorry, I couldn\'t generate a similar recipe right now. Please try again later!',
+      details: error.message
     });
   } finally {
     await prisma.$disconnect();
