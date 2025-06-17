@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 
 // Initialize Prisma client
 const prisma = new PrismaClient();
@@ -25,7 +25,7 @@ function parseTimeToMinutes(timeStr) {
   return totalMinutes || 30; // Default to 30 minutes if can't parse
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
