@@ -672,10 +672,10 @@ body {
 }
 
 .recipe-count {
-  color: #f7fafc;
+  color: #4a5568;
   font-weight: 600;
   font-size: 0.9em;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  opacity: 0.85;
 }
 
 .history-controls {
