@@ -631,6 +631,13 @@ body {
 /* Recipe History Tab */
 .history-tab {
   animation: fadeInUp 0.3s ease;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .history-header {
@@ -958,6 +965,13 @@ body {
 /* Analytics Tab */
 .analytics-tab {
   animation: fadeInUp 0.3s ease;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .analytics-tab h2 {
