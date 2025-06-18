@@ -8,6 +8,7 @@
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
   min-height: 100vh;
   color: #333;
   line-height: 1.6;
@@ -631,6 +632,26 @@ body {
 /* Recipe History Tab */
 .history-tab {
   animation: fadeInUp 0.3s ease;
+}
+
+/* Ensure consistent background across all tabs */
+.history-tab,
+.analytics-tab {
+  position: relative;
+}
+
+/* Force correct background rendering for all tab content */
+.history-tab::before,
+.analytics-tab::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: -1000;
+  pointer-events: none;
 }
 
 .history-header {
